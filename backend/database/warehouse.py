@@ -3,13 +3,19 @@ import os
 import sys
 
 # Path to the DuckDB analytical file
-WAREHOUSE_PATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "delivery_warehouse.db")
-)
+WAREHOUSE_PATH = os.environ.get("DUCKDB_PATH")
+if not WAREHOUSE_PATH:
+    WAREHOUSE_PATH = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "delivery_warehouse.db")
+    )
 if os.environ.get("TESTING") == "true":
     WAREHOUSE_PATH = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "..", "delivery_warehouse_test.db")
     )
+# Ensure directory for DuckDB warehouse exists
+warehouse_dir = os.path.dirname(WAREHOUSE_PATH)
+if warehouse_dir:
+    os.makedirs(warehouse_dir, exist_ok=True)
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))

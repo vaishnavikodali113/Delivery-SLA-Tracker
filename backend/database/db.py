@@ -1,13 +1,19 @@
 import sqlite3
 import os
 
-DB_PATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "delivery_oltp.db")
-)
+DB_PATH = os.environ.get("SQLITE_DB_PATH")
+if not DB_PATH:
+    DB_PATH = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "..", "..", "delivery_oltp.db")
+    )
 if os.environ.get("TESTING") == "true":
     DB_PATH = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "..", "..", "delivery_oltp_test.db")
     )
+# Ensure directory for DB exists
+db_dir = os.path.dirname(DB_PATH)
+if db_dir:
+    os.makedirs(db_dir, exist_ok=True)
 
 
 def get_db_connection():
